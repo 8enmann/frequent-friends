@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/8enmann/frequent-friends#readme",
   "dependencies": {
-    "node-static": "^0.7.9"
+    "node-static": "^0.7.9",
+    "tablesorter": "^2.28.3"
   }
 }

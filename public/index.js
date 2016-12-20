@@ -12,15 +12,21 @@ let app = new Vue({
   data: {
     loading: true,
     needAuth: false,
-    message: 'yo',
     months: {},
+    byMonth: false,
   },
+  computed: {
+    sortedMonths: function () {
+      return Object.keys(this.months).sort().reverse();
+    }
+  },
+  methods: {
+    sortPeople: function (obj) {
+      return Object.keys(obj).filter(x => x != 'rendered').sort((a,b) => obj[b].count - obj[a].count);
+    },
+  }
 });
 
-// Make a bin for each month.
-for (let i = 0; i < 12; i++) {
-  Vue.set(app.months, i + 1, {});
-}
 Vue.set(app.months, TOTAL, {});
 
 /**
@@ -79,14 +85,17 @@ function loadCalendarApi() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-function listUpcomingEvents() {
+function listUpcomingEvents(pageToken) {
   var request = gapi.client.calendar.events.list({
     'calendarId': 'primary',
-    'timeMin': (new Date()).toISOString(),
+    'timeMin': (new Date(Date.now() - 365 * 3600 * 24 * 1000)).toISOString(),
+    'timeMax': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 10,
-    'orderBy': 'startTime'
+    // Max 2500
+    'maxResults': 250,
+    'orderBy': 'startTime',
+    pageToken: pageToken,
   });
 
   request.execute(function(resp) {
@@ -100,18 +109,36 @@ function listUpcomingEvents() {
       
     for (var i = 0; i < events.length; i++) {
       var event = events[i];
+      if (!event.attendees) {
+        continue;
+      }
       var when = event.start.dateTime;
       if (!when) {
         when = event.start.date;
       }
-      let month = new Date(Date.parse(when)).getMonth() + 1;
+      let date = new Date(Date.parse(when));
+      // Like 2016-02
+      let month = date.toISOString().slice(0, 7);
+      if (!app.months[month]) {
+        Vue.set(app.months, month, {
+          'rendered': date.toLocaleString('en-US', {year: 'numeric', 'month': 'short'})
+        });
+      }
       for (let j = 0; j < event.attendees.length; j++) {
         let who = event.attendees[j];
+        if (!who.displayName) {
+          who.displayName = who.email;
+        }
         increment(month, who);
         increment(TOTAL, who);
       }
     }
-    app.loading = false;
+    if (resp.nextPageToken) {
+      // Recurse if necessary.
+      listUpcomingEvents(resp.nextPageToken);
+    } {
+      app.loading = false;
+    }
   });
 }
 
