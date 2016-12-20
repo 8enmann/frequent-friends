@@ -1,0 +1,22 @@
+{
+  "name": "frequent-friends",
+  "version": "1.0.0",
+  "description": "Find how often you meet with people on Google Calendar",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8enmann/frequent-friends.git"
+  },
+  "author": "Ben Mann <8enmann@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/8enmann/frequent-friends/issues"
+  },
+  "homepage": "https://github.com/8enmann/frequent-friends#readme",
+  "dependencies": {
+    "node-static": "^0.7.9"
+  }
+}
