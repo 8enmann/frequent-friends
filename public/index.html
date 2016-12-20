@@ -42,17 +42,17 @@
           <input class="form-check-input" type="checkbox" id="inlineCheckbox1" v-model=byMonth> By month
         </label>
         <div class="table-responsive" v-if="!loading">
-          <table class="table table-hover">
+          <table class="table table-hover table-sm">
             <thead class="thead-default">
               <th v-if="byMonth">Month</th>
-              <th>Person</th>
               <th>Frequency</th>
+              <th>Person</th>
             </thead>
             <tbody v-for="month in sortedMonths" v-if="(!byMonth && month == 'total') || (byMonth && month != 'total')" >
               <tr v-for="name in sortPeople(months[month])">
                 <td v-if="byMonth">{{months[month].rendered}}</td>
-                <td>{{name}}</td>
                 <td>{{months[month][name].count}}</td>
+                <td>{{name}}</td>
               </tr>
             </tbody>
           </table>
