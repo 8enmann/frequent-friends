@@ -7,7 +7,7 @@ var CLIENT_ID = '577966968069-0cdlgv4s1gri5r8584qfp4rl3v1c8d80.apps.googleuserco
 var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 const TOTAL = 'total';
 
-let app = new Vue({
+var app = new Vue({
   el: '#app',
   data: {
     loading: true,
