@@ -14,6 +14,7 @@ var app = new Vue({
     needAuth: false,
     months: {},
     byMonth: false,
+    showEmail: false,
   },
   computed: {
     sortedMonths: function () {
